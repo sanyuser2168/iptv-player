@@ -1,0 +1,5 @@
+#EXTM3U
+#EXTINF:-1 group-title="Тест",Локальный MPEG-TS
+sample.ts
+#EXTINF:-1 group-title="Тест",MPEG-2 (перекодирование)
+mpeg2.ts

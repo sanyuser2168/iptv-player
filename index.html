@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>IPTV Player — DeepSeek 4.1 Flash &amp; user2168</title>
+<meta name="description" content="Простой, красивый и удобный IPTV-плеер для m3u/m3u8 плейлистов с EPG, избранным и поиском.">
+<meta name="theme-color" content="#0a0b10">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: http: https:; media-src 'self' blob: http: https:; connect-src 'self' http: https:; font-src 'self' data:; worker-src 'self' blob:">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%237c5cff'/%3E%3Cstop offset='1' stop-color='%2322d3ee'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Cpath d='M26 20l18 12-18 12z' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/style.css">
+<script src="vendor/mpegts.min.js" defer></script>
+<script src="vendor/hls.min.js" defer></script>
+<script type="module" src="js/app.js"></script>
+</head>
+<body>
+<svg class="sprite" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.14v13.72a1 1 0 0 0 1.54.84l10.3-6.86a1 1 0 0 0 0-1.68L9.54 4.3A1 1 0 0 0 8 5.14z"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24"><rect x="6" y="4" width="4.5" height="16" rx="1.4"/><rect x="13.5" y="4" width="4.5" height="16" rx="1.4"/></symbol>
+  <symbol id="i-volume" viewBox="0 0 24 24"><path d="M4 9.5h3.2L12 5.6a.9.9 0 0 1 1.5.7v11.4a.9.9 0 0 1-1.5.7l-4.8-3.9H4a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1z"/><path d="M17 9a4.2 4.2 0 0 1 0 6M19.6 6.4a7.6 7.6 0 0 1 0 11.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-mute" viewBox="0 0 24 24"><path d="M4 9.5h3.2L12 5.6a.9.9 0 0 1 1.5.7v11.4a.9.9 0 0 1-1.5.7l-4.8-3.9H4a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1z"/><path d="M17 9.5l4 5M21 9.5l-4 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-expand" viewBox="0 0 24 24"><path d="M9 4H5a1 1 0 0 0-1 1v4M15 4h4a1 1 0 0 1 1 1v4M9 20H5a1 1 0 0 1-1-1v-4M15 20h4a1 1 0 0 0 1-1v-4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol>
+  <symbol id="i-compress" viewBox="0 0 24 24"><path d="M4 9h4a1 1 0 0 0 1-1V4M20 9h-4a1 1 0 0 1-1-1V4M4 15h4a1 1 0 0 1 1 1v4M20 15h-4a1 1 0 0 0-1 1v4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol>
+  <symbol id="i-pip" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="12" y="11" width="7" height="6" rx="1.5"/></symbol>
+  <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 17h3M11 17h9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="15" cy="7" r="2.2"/><circle cx="9" cy="17" r="2.2"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3.6l2.7 5.5 6 .9-4.35 4.24 1.03 6-5.38-2.83-5.38 2.83 1.03-6L3.3 10l6-.9z"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4.8A.8.8 0 0 1 9.8 4h4.4a.8.8 0 0 1 .8.8V7M6.5 7l.8 12.2a1.8 1.8 0 0 0 1.8 1.8h5.8a1.8 1.8 0 0 0 1.8-1.8L17.5 7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.34-5.66M20 4v5h-5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="1.9"/><path d="M16 16l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol>
+  <symbol id="i-tv" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M8 3.5l4 3.5 4-3.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 11v5.5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><circle cx="12" cy="7.8" r="1.15"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 7.5V12l3 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-7.5-9.3A4.2 4.2 0 0 1 12 8a4.2 4.2 0 0 1 7.5 2.7C19.5 15.4 12 20 12 20z"/></symbol>
+  <symbol id="i-prev" viewBox="0 0 24 24"><path d="M18 6v12L9 12zM6 5v14" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></symbol>
+  <symbol id="i-next" viewBox="0 0 24 24"><path d="M6 6v12l9-6zM18 5v14" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5M4.5 15v3.5A1.5 1.5 0 0 0 6 20h12a1.5 1.5 0 0 0 1.5-1.5V15" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10.5 13.5a4 4 0 0 0 5.66 0l2.84-2.84a4 4 0 0 0-5.66-5.66l-1.3 1.3M13.5 10.5a4 4 0 0 0-5.66 0L5 13.34a4 4 0 0 0 5.66 5.66l1.3-1.3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-signal" viewBox="0 0 24 24"><path d="M5 18v-3M9.7 18v-6M14.3 18V8M19 18V5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
+</svg>
+
+<div class="ambient" aria-hidden="true"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span></div>
+
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark"><svg><use href="#i-play"/></svg></div>
+      <div class="brand-text">
+        <strong>IPTV&nbsp;Player</strong>
+        <span>DeepSeek 4.1 Flash · user2168</span>
+      </div>
+    </div>
+
+    <label class="search" for="searchInput">
+      <svg class="ico"><use href="#i-search"/></svg>
+      <input id="searchInput" type="search" placeholder="Поиск канала, группы…" autocomplete="off" spellcheck="false">
+      <kbd>/</kbd>
+    </label>
+
+    <div class="topbar-actions">
+      <button class="btn btn-primary" id="btnAdd">
+        <svg class="ico"><use href="#i-plus"/></svg><span>Плейлист</span>
+      </button>
+      <button class="btn btn-ghost btn-icon" id="btnAbout" title="О плеере" aria-label="О плеере">
+        <svg class="ico"><use href="#i-info"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <div class="source-row">
+          <div class="source-select-wrap">
+            <svg class="ico"><use href="#i-tv"/></svg>
+            <select id="sourceSelect" aria-label="Плейлист"></select>
+          </div>
+          <button class="btn btn-ghost btn-icon" id="btnReload" title="Обновить плейлист" aria-label="Обновить плейлист">
+            <svg class="ico"><use href="#i-refresh"/></svg>
+          </button>
+          <button class="btn btn-ghost btn-icon danger" id="btnRemove" title="Удалить плейлист" aria-label="Удалить плейлист">
+            <svg class="ico"><use href="#i-trash"/></svg>
+          </button>
+        </div>
+
+        <div class="filters">
+          <button class="pill is-active" data-filter="all">Все</button>
+          <button class="pill" data-filter="fav"><svg class="ico"><use href="#i-star"/></svg>Избранное</button>
+          <button class="pill" data-filter="recent"><svg class="ico"><use href="#i-clock"/></svg>Недавние</button>
+        </div>
+
+        <div class="group-row">
+          <svg class="ico"><use href="#i-signal"/></svg>
+          <select id="groupSelect" aria-label="Категория"></select>
+        </div>
+      </div>
+
+      <div class="channel-meta">
+        <span id="chanCount">0 каналов</span>
+        <span id="favCount"></span>
+      </div>
+
+      <div class="channel-scroll" id="chanScroll" tabindex="0">
+        <div class="chan-spacer" id="chanSpacer">
+          <div class="chan-window" id="chanWindow"></div>
+        </div>
+        <div class="empty-list" id="emptyList" hidden>
+          <svg class="ico"><use href="#i-tv"/></svg>
+          <p>Ничего не найдено</p>
+          <span>Измените запрос или категорию</span>
+        </div>
+      </div>
+    </aside>
+
+    <section class="stage">
+      <div class="player-card" id="playerCard">
+        <video id="video" playsinline preload="metadata"></video>
+
+        <div class="player-placeholder" id="playerPlaceholder">
+          <div class="ph-glow"></div>
+          <div class="ph-icon"><svg><use href="#i-play"/></svg></div>
+          <h2>Выберите канал</h2>
+          <p>Загрузите m3u/m3u8 плейлист или нажмите на канал слева</p>
+          <div class="ph-actions">
+            <button class="btn btn-primary" id="btnAdd2"><svg class="ico"><use href="#i-plus"/></svg>Добавить плейлист</button>
+            <button class="btn btn-ghost" id="btnDemo"><svg class="ico"><use href="#i-play"/></svg>Демо-каналы</button>
+          </div>
+        </div>
+
+        <div class="player-loader" id="playerLoader" hidden>
+          <div class="spinner"></div>
+          <span id="loaderText">Подключение…</span>
+        </div>
+
+        <div class="player-error" id="playerError" hidden>
+          <div class="err-icon"><svg><use href="#i-x"/></svg></div>
+          <h3 id="errTitle">Не удалось воспроизвести</h3>
+          <p id="errText">Поток недоступен или формат не поддерживается. Попробуйте перекодировать или повторить.</p>
+          <div class="err-actions">
+            <button class="btn btn-primary" id="btnRetry"><svg class="ico"><use href="#i-refresh"/></svg>Повторить</button>
+            <button class="btn btn-ghost" id="btnTranscode" hidden><svg class="ico"><use href="#i-sliders"/></svg>Перекодировать</button>
+          </div>
+        </div>
+
+        <div class="controls" id="controls">
+          <div class="seek" id="seekWrap" hidden>
+            <input type="range" id="seek" min="0" max="1000" value="0" step="1" aria-label="Позиция">
+          </div>
+          <div class="controls-bar">
+            <button class="ctl" id="btnPlay" title="Play / Pause (Space)" aria-label="Воспроизведение">
+              <svg class="ico"><use href="#i-play"/></svg>
+            </button>
+            <button class="ctl" id="btnPrev" title="Предыдущий канал (←)" aria-label="Предыдущий канал">
+              <svg class="ico"><use href="#i-prev"/></svg>
+            </button>
+            <button class="ctl" id="btnNext" title="Следующий канал (→)" aria-label="Следующий канал">
+              <svg class="ico"><use href="#i-next"/></svg>
+            </button>
+
+            <div class="volume">
+              <button class="ctl" id="btnMute" title="Звук (M)" aria-label="Звук">
+                <svg class="ico"><use href="#i-volume"/></svg>
+              </button>
+              <input type="range" id="volume" min="0" max="1" step="0.01" value="1" aria-label="Громкость">
+            </div>
+
+            <div class="ctl-title" id="ctlTitle"></div>
+
+            <span class="live-badge" id="liveBadge" hidden><i></i>LIVE</span>
+            <button class="ctl quality" id="btnQuality" title="Качество" hidden>Auto</button>
+            <button class="ctl" id="btnPip" title="Картинка в картинке" aria-label="Картинка в картинке">
+              <svg class="ico"><use href="#i-pip"/></svg>
+            </button>
+            <button class="ctl" id="btnFull" title="Полный экран (F)" aria-label="Полный экран">
+              <svg class="ico"><use href="#i-expand"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-grid">
+        <article class="card now-card" id="nowCard">
+          <div class="now-head">
+            <div class="now-logo" id="nowLogo"><svg><use href="#i-tv"/></svg></div>
+            <div class="now-titles">
+              <div class="now-meta"><span class="dot"></span><span id="nowGroup">—</span><span id="nowQuality"></span></div>
+              <h2 id="nowName">Канал не выбран</h2>
+              <p id="nowUrl">Выберите канал из списка слева, чтобы начать просмотр</p>
+            </div>
+            <button class="star-btn big" id="btnFavorite" title="В избранное" aria-label="В избранное">
+              <svg class="ico"><use href="#i-star"/></svg>
+            </button>
+          </div>
+        </article>
+
+        <article class="card epg-card">
+          <div class="epg-head">
+            <span class="card-label"><svg class="ico"><use href="#i-clock"/></svg>Программа передач</span>
+            <span class="epg-date" id="epgDate"></span>
+          </div>
+          <div class="epg-now" id="epgNow">
+            <div class="epg-empty" id="epgEmpty">Нет данных EPG. Добавьте ссылку XMLTV при создании плейлиста — и здесь появится программа передач.</div>
+            <div class="epg-prog" id="epgProg" hidden>
+              <div class="epg-prog-top">
+                <strong id="epgTitle">—</strong>
+                <span id="epgTime">—</span>
+              </div>
+              <div class="epg-bar"><i id="epgProgress" style="width:0%"></i></div>
+              <div class="epg-next"><span>Далее</span><b id="epgNext">—</b><em id="epgNextTime"></em></div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>Автор: <b>DeepSeek 4.1 Flash</b> &amp; <b>user2168</b></span>
+    <span class="sep">·</span>
+    <span>Локальный плеер IPTV: m3u · m3u8 · HLS · MPEG-TS · XMLTV EPG</span>
+    <span class="sep">·</span>
+    <span id="proxyState" class="proxy-state">Проверка сервера…</span>
+  </footer>
+</div>
+
+<dialog class="modal" id="addDialog">
+  <form class="modal-form" id="addForm" method="dialog">
+    <div class="modal-head">
+      <div>
+        <h3>Добавить плейлист</h3>
+        <p>Ссылка на m3u/m3u8, файл или данные Xtream Codes</p>
+      </div>
+      <button type="button" class="btn btn-ghost btn-icon" id="btnAddClose" aria-label="Закрыть">
+        <svg class="ico"><use href="#i-x"/></svg>
+      </button>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button type="button" class="tab is-active" data-tab="url" role="tab">Ссылка</button>
+      <button type="button" class="tab" data-tab="file" role="tab">Файл</button>
+      <button type="button" class="tab" data-tab="xtream" role="tab">Xtream</button>
+    </div>
+
+    <div class="tab-panel" data-panel="url">
+      <label class="field">
+        <span>URL плейлиста</span>
+        <input id="inpUrl" type="url" placeholder="https://example.com/playlist.m3u" autocomplete="off" spellcheck="false">
+      </label>
+      <label class="field">
+        <span>Название <em>необязательно</em></span>
+        <input id="inpName" type="text" placeholder="Например, «Домашний IPTV»" autocomplete="off">
+      </label>
+    </div>
+
+    <div class="tab-panel" data-panel="file" hidden>
+      <label class="dropzone" id="dropzone">
+        <input id="inpFile" type="file" accept=".m3u,.m3u8,.txt,audio/x-mpegurl,application/x-mpegurl" hidden>
+        <svg class="ico"><use href="#i-upload"/></svg>
+        <strong>Перетащите файл сюда</strong>
+        <span>или нажмите, чтобы выбрать .m3u / .m3u8 / .txt</span>
+        <em id="fileName"></em>
+      </label>
+    </div>
+
+    <div class="tab-panel" data-panel="xtream" hidden>
+      <div class="field-row">
+        <label class="field">
+          <span>Сервер</span>
+          <input id="inpHost" type="text" placeholder="http://host:8080" autocomplete="off" spellcheck="false">
+        </label>
+      </div>
+      <div class="field-row two">
+        <label class="field">
+          <span>Логин</span>
+          <input id="inpUser" type="text" autocomplete="off" spellcheck="false">
+        </label>
+        <label class="field">
+          <span>Пароль</span>
+          <input id="inpPass" type="password" autocomplete="off">
+        </label>
+      </div>
+      <p class="hint">Будет создан плейлист вида <code>/get.php?username=…&amp;type=m3u_plus</code></p>
+    </div>
+
+    <label class="field">
+      <span>EPG / XMLTV <em>необязательно</em></span>
+      <input id="inpEpg" type="url" placeholder="https://example.com/epg.xml.gz" autocomplete="off" spellcheck="false">
+    </label>
+
+    <div class="modal-msg" id="addMsg" hidden></div>
+
+    <div class="modal-foot">
+      <button type="button" class="btn btn-ghost" id="btnDemo2">Демо-плейлист</button>
+      <div class="spacer"></div>
+      <button type="button" class="btn btn-ghost" id="btnCancel">Отмена</button>
+      <button type="submit" class="btn btn-primary" id="btnSubmit">Добавить</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog class="modal about" id="aboutDialog">
+  <div class="modal-form">
+    <div class="modal-head">
+      <div>
+        <h3>О плеере</h3>
+        <p>IPTV Player 1.0</p>
+      </div>
+      <button type="button" class="btn btn-ghost btn-icon" id="btnAboutClose" aria-label="Закрыть">
+        <svg class="ico"><use href="#i-x"/></svg>
+      </button>
+    </div>
+    <div class="about-body">
+      <p>Лёгкий локальный плеер IPTV-плейлистов: m3u/m3u8, HLS, Xtream Codes, программа передач XMLTV.</p>
+      <dl>
+        <div><dt>Авторы</dt><dd>DeepSeek 4.1 Flash &amp; user2168</dd></div>
+        <div><dt>Движок потока</dt><dd>hls.js · mpegts.js · HTML5 Video</dd></div>
+        <div><dt>Перекодирование</dt><dd>FFmpeg — автоматически, если кодек не поддерживается</dd></div>
+        <div><dt>Хранение</dt><dd>локально в браузере (localStorage + IndexedDB)</dd></div>
+      </dl>
+      <div class="keys">
+        <div><kbd>Space</kbd><span>Play / Pause</span></div>
+        <div><kbd>F</kbd><span>Полный экран</span></div>
+        <div><kbd>M</kbd><span>Звук</span></div>
+        <div><kbd>/</kbd><span>Поиск</span></div>
+        <div><kbd>←</kbd><span>Предыдущий канал</span></div>
+        <div><kbd>→</kbd><span>Следующий канал</span></div>
+      </div>
+      <p class="muted small">Плеер не содержит каналов: вы используете собственные легальные источники.</p>
+    </div>
+  </div>
+</dialog>
+
+<div class="toast-stack" id="toasts"></div>
+</body>
+</html>

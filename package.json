@@ -1,0 +1,65 @@
+{
+  "name": "iptv-player",
+  "productName": "IPTV Player",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Простой и удобный IPTV-плеер для m3u/m3u8 плейлистов с EPG, избранным и поиском",
+  "author": "DeepSeek 4.1 Flash & user2168",
+  "license": "MIT",
+  "type": "module",
+  "main": "electron/main.js",
+  "scripts": {
+    "start": "node server.js",
+    "app": "electron .",
+    "smoke": "electron . --smoke",
+    "icon": "node build/make-icon.mjs",
+    "fetch-ffmpeg": "powershell -ExecutionPolicy Bypass -File build/fetch-ffmpeg.ps1",
+    "dist": "npm run icon && electron-builder --win portable --x64 --publish never",
+    "dist:dir": "npm run icon && electron-builder --win dir --x64 --publish never"
+  },
+  "devDependencies": {
+    "electron": "^45.3.2",
+    "electron-builder": "^26.18.0"
+  },
+  "build": {
+    "appId": "ru.user2168.iptvplayer",
+    "productName": "IPTV Player",
+    "copyright": "© 2026 DeepSeek 4.1 Flash & user2168",
+    "asar": true,
+    "npmRebuild": false,
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "index.html",
+      "css/**/*",
+      "js/**/*",
+      "vendor/**/*",
+      "server.js",
+      "electron/**/*",
+      "build/icon.png",
+      "package.json",
+      "THIRD_PARTY_NOTICES.md"
+    ],
+    "extraResources": [
+      {
+        "from": "bin/ffmpeg.exe",
+        "to": "bin/ffmpeg.exe"
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "build/icon.ico",
+      "artifactName": "IPTV-Player-${version}-x64.exe"
+    },
+    "portable": {
+      "artifactName": "IPTV-Player-${version}-x64.exe"
+    }
+  }
+}

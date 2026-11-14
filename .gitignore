@@ -1,0 +1,14 @@
+node_modules/
+dist/
+tools/
+bin/
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+build/sample.ts
+build/mpeg2.ts
+docs/*.tmp
