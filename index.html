@@ -52,12 +52,6 @@
       </div>
     </div>
 
-    <label class="search" for="searchInput">
-      <svg class="ico"><use href="#i-search"/></svg>
-      <input id="searchInput" type="search" placeholder="Поиск канала, группы…" autocomplete="off" spellcheck="false">
-      <kbd>/</kbd>
-    </label>
-
     <div class="topbar-actions">
       <button class="btn btn-primary" id="btnAdd">
         <svg class="ico"><use href="#i-plus"/></svg><span>Плейлист</span>
@@ -83,6 +77,14 @@
             <svg class="ico"><use href="#i-trash"/></svg>
           </button>
         </div>
+
+        <label class="sidebar-search" for="searchInput">
+          <svg class="ico"><use href="#i-search"/></svg>
+          <input id="searchInput" type="search" placeholder="Поиск каналов…" autocomplete="off" spellcheck="false">
+          <button type="button" class="search-clear" id="searchClear" hidden aria-label="Очистить поиск" title="Очистить">
+            <svg class="ico"><use href="#i-x"/></svg>
+          </button>
+        </label>
 
         <div class="filters">
           <button class="pill is-active" data-filter="all">Все</button>

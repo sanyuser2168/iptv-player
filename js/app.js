@@ -32,6 +32,7 @@ const $ = (sel) => document.querySelector(sel);
 
 const EL = {
   search: $('#searchInput'),
+  searchClear: $('#searchClear'),
   sourceSelect: $('#sourceSelect'),
   groupSelect: $('#groupSelect'),
   groupRow: $('.group-row'),
@@ -413,6 +414,7 @@ async function loadSource(source) {
     }
 
     source.channels = parsed.channels;
+    for (const channel of source.channels) channel.sourceId = source.id;
     source.status = 'ready';
     source.error = '';
     source.epg = source.epg || null;
@@ -574,24 +576,56 @@ function rebuildGroups() {
 
 function visibleChannels() {
   const source = activeSource();
+  const q = state.query.trim().toLowerCase();
+
+  // Search runs across every playlist (or inside favourites/recents).
+  if (q) {
+    let pool;
+    if (state.filter === 'fav') pool = Array.from(state.favorites.values());
+    else if (state.filter === 'recent') pool = state.recent.slice(0, 40);
+    else pool = state.sources.flatMap((src) => src.channels);
+
+    return pool.filter((ch) => {
+      const hay = `${ch.name || ''} ${ch.group || ''} ${ch.tvgName || ''} ${ch.tvgId || ''} ${ch.number || ''}`.toLowerCase();
+      return hay.includes(q);
+    });
+  }
+
   let list;
   if (state.filter === 'fav') list = Array.from(state.favorites.values());
   else if (state.filter === 'recent') list = state.recent.slice(0, 40);
   else list = source?.channels || [];
-
-  const q = state.query.trim().toLowerCase();
-  if (q) {
-    list = list.filter((ch) => {
-      const hay = `${ch.name || ''} ${ch.group || ''} ${ch.tvgName || ''} ${ch.tvgId || ''}`.toLowerCase();
-      return hay.includes(q);
-    });
-  }
 
   if (state.filter === 'all' && state.group !== 'all') {
     list = list.filter((ch) => (ch.group || NO_GROUP) === state.group);
   }
 
   return list;
+}
+
+function highlightMatches(text, query) {
+  const value = String(text || '');
+  const needle = String(query || '').trim();
+  if (!needle) return [document.createTextNode(value)];
+
+  const nodes = [];
+  const lower = value.toLowerCase();
+  const target = needle.toLowerCase();
+  let index = 0;
+  let found = lower.indexOf(target);
+
+  if (found === -1) return [document.createTextNode(value)];
+
+  while (found !== -1) {
+    if (found > index) nodes.push(document.createTextNode(value.slice(index, found)));
+    const mark = document.createElement('mark');
+    mark.textContent = value.slice(found, found + target.length);
+    nodes.push(mark);
+    index = found + target.length;
+    found = lower.indexOf(target, index);
+  }
+  if (index < value.length) nodes.push(document.createTextNode(value.slice(index)));
+  return nodes;
 }
 
 function nowTitleFor(channel) {
@@ -602,9 +636,11 @@ function nowTitleFor(channel) {
 }
 
 function renderRow(channel, index) {
-  const key = channel.key || channelKey(state.activeId || '', channel);
+  const key = channel.key || channelKey(channel.sourceId || state.activeId || '', channel);
   const isActive = state.current?.key === key;
   const isFav = state.favorites.has(key);
+  const source = sourceById(channel.sourceId);
+  const crossSource = Boolean(source && source.id !== state.activeId);
 
   const row = document.createElement('div');
   row.className = `chan${isActive ? ' is-active' : ''}`;
@@ -619,11 +655,13 @@ function renderRow(channel, index) {
   body.className = 'chan-body';
   const name = document.createElement('div');
   name.className = 'chan-name';
-  name.textContent = channel.name;
+  name.append(...highlightMatches(channel.name, state.query.trim()));
   const sub = document.createElement('div');
   sub.className = 'chan-sub';
   const now = nowTitleFor(channel);
-  sub.textContent = now ? `Сейчас: ${now}` : channel.group || NO_GROUP;
+  sub.textContent = now
+    ? `Сейчас: ${now}`
+    : [crossSource ? source.name : '', channel.group || NO_GROUP].filter(Boolean).join(' · ');
   body.append(name, sub);
 
   const star = document.createElement('button');
@@ -665,8 +703,12 @@ function renderWindow() {
 
 function renderChannels() {
   state.viewList = visibleChannels();
+  const searching = Boolean(state.query.trim());
 
-  if (state.filter === 'all') {
+  if (searching) {
+    const found = state.viewList.length;
+    EL.chanCount.textContent = `${found} ${plural(found, ['совпадение', 'совпадения', 'совпадений'])}`;
+  } else if (state.filter === 'all') {
     const src = activeSource();
     const count = src?.channels.length || 0;
     EL.chanCount.textContent = `${count} ${plural(count, ['канал', 'канала', 'каналов'])}`;
@@ -675,6 +717,8 @@ function renderChannels() {
   } else {
     EL.chanCount.textContent = `${Math.min(state.recent.length, 40)} недавних`;
   }
+
+  EL.groupRow.classList.toggle('is-hidden', state.filter !== 'all' || searching);
 
   EL.favCount.textContent = state.favorites.size ? `★ ${state.favorites.size}` : '';
 

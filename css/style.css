@@ -217,6 +217,23 @@ button { font-family: inherit; }
   background: rgba(255, 255, 255, 0.04);
 }
 
+.search-clear {
+  width: 26px;
+  height: 26px;
+  border: 0;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--muted);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  flex: none;
+  transition: 0.14s;
+}
+
+.search-clear .ico { width: 13px; height: 13px; }
+.search-clear:hover { background: rgba(255, 255, 255, 0.16); color: #fff; }
+
 .topbar-actions { display: flex; align-items: center; gap: 8px; justify-self: end; }
 
 /* ---------- buttons ---------- */
@@ -547,6 +564,13 @@ select option { background: #161824; color: var(--text); }
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.chan-name mark {
+  background: rgba(124, 92, 255, 0.4);
+  color: #fff;
+  border-radius: 3px;
+  padding: 0 1px;
 }
 
 .chan-sub {
