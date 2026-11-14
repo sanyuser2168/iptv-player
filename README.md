@@ -17,7 +17,7 @@ m3u/m3u8 · HLS · MPEG-TS · Xtream Codes · XMLTV EPG · автопереко�
 **[Releases](https://github.com/sanyuser2168/iptv-player/releases/latest)**:
 
 ```
-IPTV-Player-1.0.0-x64.exe   (~132 МБ)
+IPTV-Player-1.1.0-x64.exe   (~132 МБ)
 ```
 
 Установка не нужна: скачайте и запустите `.exe`. Настройки, плейлисты,
@@ -84,6 +84,30 @@ IPTV-Player-1.0.0-x64.exe   (~132 МБ)
 - Некоторые провайдеры блокируют не-браузерные клиенты или требуют VPN.
 - Плеер не содержит каналов — используйте только легальные источники.
 
+## Версии и релизы
+
+Версия хранится в `package.json`, показывается в футере приложения и в
+окне «О плеере». Релизы публикуются тегом `vX.Y.Z`, файл —
+`IPTV-Player-X.Y.Z-x64.exe`.
+
+- `1.1.0` — новая функция (поиск каналов);
+- `1.1.1` — исправления;
+- `1.2.0` — следующие новые функции.
+
+История изменений — [CHANGELOG.md](CHANGELOG.md).
+
+Выпуск новой версии:
+
+```bash
+npm version 1.1.1 --no-git-tag-version
+npm run dist
+git add -A && git commit -m "v1.1.1"
+git tag v1.1.1
+git push origin main --tags
+gh release create v1.1.1 dist/IPTV-Player-1.1.1-x64.exe \
+  --title "IPTV Player 1.1.1" --notes-file build/release-notes.md
+```
+
 ## Сборка из исходников
 
 Требования: Windows, [Node.js](https://nodejs.org) 20+.
@@ -91,7 +115,7 @@ IPTV-Player-1.0.0-x64.exe   (~132 МБ)
 ```bash
 npm install
 npm run fetch-ffmpeg   # скачает bin/ffmpeg.exe (~100 МБ, нужен для транскодинга)
-npm run dist           # dist/IPTV-Player-1.0.0-x64.exe (portable)
+npm run dist           # dist/IPTV-Player-1.1.0-x64.exe (portable)
 ```
 
 Полезные команды:

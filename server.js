@@ -216,6 +216,19 @@ async function handleTranscode(req, res, search) {
   res.on('close', abort);
 }
 
+let versionCache = '';
+
+function appVersion() {
+  if (!versionCache) {
+    try {
+      versionCache = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8')).version || '0.0.0';
+    } catch {
+      versionCache = '0.0.0';
+    }
+  }
+  return versionCache;
+}
+
 function sendJson(res, status, data) {
   const body = Buffer.from(JSON.stringify(data));
   res.writeHead(status, { ...CORS, 'content-type': 'application/json; charset=utf-8', 'content-length': body.length });
@@ -510,7 +523,7 @@ function handler(req, res) {
 
   const route = async () => {
     if (url.pathname === '/api/ping') {
-      sendJson(res, 200, { ok: true, app: 'iptv-player', transcode: Boolean(findFfmpeg()) });
+      sendJson(res, 200, { ok: true, app: 'iptv-player', transcode: Boolean(findFfmpeg()), version: appVersion() });
       return;
     }
     if (url.pathname === '/api/fetch') {

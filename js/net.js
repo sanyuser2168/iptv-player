@@ -8,6 +8,11 @@ const HAS_DOM = typeof window !== 'undefined';
 
 let viaServer = false;
 let transcodeAvailable = false;
+let serverVersion = '';
+
+export function getAppVersion() {
+  return serverVersion || '1.1.0';
+}
 
 export function setViaServer(value) {
   viaServer = Boolean(value);
@@ -50,6 +55,7 @@ export async function detectServer() {
     const data = await res.json();
     setViaServer(data && data.ok === true);
     transcodeAvailable = Boolean(data && data.transcode);
+    serverVersion = (data && data.version) || '';
   } catch {
     setViaServer(false);
     transcodeAvailable = false;

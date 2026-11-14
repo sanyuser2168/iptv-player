@@ -1,7 +1,7 @@
 {
   "name": "iptv-player",
   "productName": "IPTV Player",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "description": "Простой и удобный IPTV-плеер для m3u/m3u8 плейлистов с EPG, избранным и поиском",
   "author": "DeepSeek 4.1 Flash & user2168",

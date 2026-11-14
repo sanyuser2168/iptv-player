@@ -20,6 +20,7 @@ import {
   probeStream,
   canTranscode,
   transcodeUrl,
+  getAppVersion,
 } from './net.js';
 import { parseXmltv, getSchedule } from './epg.js';
 import { Player } from './player.js';
@@ -1645,6 +1646,13 @@ async function boot() {
   updateFilterPills();
   await detectServer();
   updateProxyState();
+
+  const version = getAppVersion();
+  const versionNode = document.getElementById('appVersion');
+  if (versionNode) versionNode.textContent = `v${version}`;
+  const aboutVersionNode = document.getElementById('aboutVersion');
+  if (aboutVersionNode) aboutVersionNode.textContent = version;
+
   document.body.dataset.transcode = canTranscode() ? '1' : '0';
   window.__iptv = {
     state,

@@ -1139,6 +1139,7 @@ select option { background: #161824; color: var(--text); }
 
 .footer b { color: var(--muted); font-weight: 600; }
 .footer .sep { opacity: 0.4; }
+.footer .app-version b { color: #cfd4e8; letter-spacing: 0.4px; }
 
 .proxy-state { display: inline-flex; align-items: center; gap: 5px; }
 .proxy-state::before {
