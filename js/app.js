@@ -1297,16 +1297,32 @@ function bindEvents() {
   // search
   let searchTimer = 0;
   EL.search.addEventListener('input', () => {
+    EL.searchClear.hidden = !EL.search.value;
     clearTimeout(searchTimer);
     searchTimer = setTimeout(() => {
       state.query = EL.search.value;
+      EL.chanScroll.scrollTop = 0;
       renderChannels();
     }, 110);
   });
+
+  EL.searchClear.addEventListener('click', (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    EL.search.value = '';
+    state.query = '';
+    EL.searchClear.hidden = true;
+    EL.chanScroll.scrollTop = 0;
+    renderChannels();
+    EL.search.focus();
+  });
+
   EL.search.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') {
       EL.search.value = '';
       state.query = '';
+      EL.searchClear.hidden = true;
+      EL.chanScroll.scrollTop = 0;
       renderChannels();
       EL.search.blur();
     }
@@ -1491,6 +1507,13 @@ function bindEvents() {
     const tag = document.activeElement?.tagName;
     const typing = tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || document.activeElement?.isContentEditable;
     if (EL.addDialog.open || EL.aboutDialog.open) return;
+
+    if ((event.ctrlKey || event.metaKey) && (event.key === 'f' || event.key === 'F')) {
+      event.preventDefault();
+      EL.search.focus();
+      EL.search.select();
+      return;
+    }
 
     if (event.key === '/' && !typing) {
       event.preventDefault();

@@ -6,6 +6,14 @@
   "description": "Простой и удобный IPTV-плеер для m3u/m3u8 плейлистов с EPG, избранным и поиском",
   "author": "DeepSeek 4.1 Flash & user2168",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sanyuser2168/iptv-player.git"
+  },
+  "homepage": "https://github.com/sanyuser2168/iptv-player#readme",
+  "bugs": {
+    "url": "https://github.com/sanyuser2168/iptv-player/issues"
+  },
   "type": "module",
   "main": "electron/main.js",
   "scripts": {
